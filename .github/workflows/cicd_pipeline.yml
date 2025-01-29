@@ -3,7 +3,7 @@ name: DevOps Challenge Pipeline
 on:
   push:
     branches:
-      - mains
+      - main
 
 jobs:
   provision:
