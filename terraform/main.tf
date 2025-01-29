@@ -40,7 +40,7 @@ resource "aws_instance" "Ansible_project_instances" {
   count         = 2
   ami           = var.ami_id
   instance_type = var.instance_type
-#  key_name      = aws_key_pair.ansible_key.key_name
+  key_name      = aws_key_pair.ansible_key.key_name
   security_groups = [
     aws_security_group.allow_ssh.name
   ]
