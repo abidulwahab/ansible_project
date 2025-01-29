@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: testserver
   become: true
   tasks:
     # Install required software packages
