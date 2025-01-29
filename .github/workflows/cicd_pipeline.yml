@@ -47,7 +47,7 @@ jobs:
         working-directory: ansible
 
       - name: Run Ansible Playbook
-        run: ansible-playbook -i inventory.ini site.yml
+        run: ansible-playbook -i inventory.ini ansible_playbook.yml
         working-directory: ansible
 
   compliance_testing:
