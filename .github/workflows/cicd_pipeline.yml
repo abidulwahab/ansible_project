@@ -1,0 +1,50 @@
+name: DevOps Challenge Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+  ansible_configuration:
+    needs: provision
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Ansible
+        run: sudo apt-get install -y ansible
+
+      - name: Run Ansible Playbook
+        run: ansible-playbook -i inventory.ini site.yml
+
+  compliance_testing:
+    needs: ansible_configuration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install InSpec
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+
+      - name: Run InSpec Tests
+        run: inspec exec controls/devops_challenge.rb
