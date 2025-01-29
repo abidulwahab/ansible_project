@@ -1,0 +1,69 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    # Install required software packages
+    - name: Install nginx, git, and python3
+      apt:
+        name:
+          - nginx
+          - git
+          - python3
+        state: present
+        update_cache: yes
+
+    # Configure nginx default page
+    - name: Update nginx default webpage
+      copy:
+        content: "Welcome to the DevOps Challenge"
+        dest: /var/www/html/index.nginx-debian.html
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+    # Disable root login via SSH
+    - name: Disable root login via SSH
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+        state: present
+
+    # Set SSH port to 22 (default, but ensure)
+    - name: Ensure SSH is using port 22
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?Port'
+        line: 'Port 22'
+        state: present
+
+    - name: Restart SSH service
+      service:
+        name: ssh
+        state: restarted
+
+    # Create a new user and configure it
+    - name: Create devops user
+      user:
+        name: devops
+        groups: sudo
+        state: present
+        shell: /bin/bash
+
+    - name: Create SSH directory for devops
+      file:
+        path: /home/devops/.ssh
+        state: directory
+        owner: devops
+        group: devops
+        mode: 0700
+
+    - name: Add public key to authorized_keys
+      copy:
+        content: "{{ lookup('file', 'devops_key.pub') }}"
+        dest: /home/devops/.ssh/authorized_keys
+        owner: devops
+        group: devops
+        mode: 0600
