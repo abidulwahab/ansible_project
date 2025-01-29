@@ -58,5 +58,10 @@ resource "aws_instance" "Ansible_project_instances" {
               sudo apt-get install -y ansible
             fi
         EOF
+  provisioner "local-exec" {
+    command = "echo '' > ../ansible/inventory.ini; echo '${self.public_ip}' ansible_user=devops ansible_ssh_private_key_file=~/.ssh/id_rsa>> ../ansible/inventory.ini"
+    
+  }
+
 }
 
