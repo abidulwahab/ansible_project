@@ -2,13 +2,13 @@ provider "aws" {
   region = var.aws_region
 }
 
-/*
+
 # Define the key pair
 resource "aws_key_pair" "ansible_key" {
-  key_name   = "ansible-key"
+  key_name   = "kabid_Key_Pair"
   public_key = file(var.public_key_path)
 }
-*/
+
 # Security group to allow SSH
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
