@@ -27,13 +27,30 @@ jobs:
         with:
           terraform_version: 1.4.0
 
+      - name: Generate SSH Key
+        run: |
+          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+          cat ~/.ssh/id_rsa.pub > public_key.pub
+          
+      - name: Configure Terraform
+        run: |
+          echo "public_key_path=$(pwd)/public_key.pub" >> $GITHUB_ENV
+
       - name: Terraform Init
         run: terraform init
         working-directory: terraform
-
+        
       - name: Terraform Apply
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve -var="public_key_path=$PUBLIC_KEY_PATH"
         working-directory: terraform
+        
+ #     - name: Terraform Init
+ #       run: terraform init
+ #       working-directory: terraform
+
+  #    - name: Terraform Apply
+  #      run: terraform destroy -auto-approve
+  #      working-directory: terraform
 
   ansible_configuration:
     needs: provision
