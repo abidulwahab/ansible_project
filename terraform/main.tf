@@ -35,7 +35,7 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-# Create 3 Ubuntu EC2 instances
+#Create 3 Ubuntu EC2 instances
 resource "aws_instance" "Ansible_project_instances" {
   count         = 3
   ami           = var.ami_id
