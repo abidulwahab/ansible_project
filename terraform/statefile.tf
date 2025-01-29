@@ -1,4 +1,4 @@
-
+/*
 # 
 terraform {
   backend "s3" {
@@ -8,3 +8,4 @@ terraform {
 #    dynamodb_table = "terraform-lock"
   }
 }
+*/
