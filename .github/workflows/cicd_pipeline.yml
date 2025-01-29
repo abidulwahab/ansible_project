@@ -19,9 +19,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        working-directory: terraform
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        working-directory: terraform
 
   ansible_configuration:
     needs: provision
@@ -32,9 +34,11 @@ jobs:
 
       - name: Install Ansible
         run: sudo apt-get install -y ansible
+        working-directory: ansible
 
       - name: Run Ansible Playbook
         run: ansible-playbook -i inventory.ini site.yml
+        working-directory: ansible
 
   compliance_testing:
     needs: ansible_configuration
@@ -45,6 +49,8 @@ jobs:
 
       - name: Install InSpec
         run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+        working-directory: inspec
 
       - name: Run InSpec Tests
         run: inspec exec controls/devops_challenge.rb
+        working-directory: inspec
